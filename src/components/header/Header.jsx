@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header>
       <div className="container header__container">
-        <h1>Stock Market Indicator</h1>
+        <h1>JVTrades</h1>
       </div>
     </header>
   )
