@@ -1,0 +1,13 @@
+.stockData__container{
+    text-align: center;
+    position: relative;
+    height: 100%;
+}
+
+.green-check {
+    color: green;
+  }
+
+  .red-cross {
+    color: red;
+  }
