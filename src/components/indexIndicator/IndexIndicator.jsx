@@ -15,9 +15,9 @@ function IndexIndicator() {
 
   const date = new Date();
   const today = new Date(date);
-  const twentyDaysAgo = new Date(date);
-  today.setDate(today.getDate() - 1); // Go back 20 days
-  twentyDaysAgo.setDate(today.getDate() - 31); // Go back 20 days
+  const fourtyDaysAgo = new Date(date);
+  today.setDate(today.getDate()); // Go back 20 days
+  fourtyDaysAgo.setDate(today.getDate() - 40); // Go back 40 days
 
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -26,7 +26,7 @@ function IndexIndicator() {
     return `${year}-${month}-${day}`;
   };
   
-  const startDateStr = formatDate(twentyDaysAgo);
+  const startDateStr = formatDate(fourtyDaysAgo);
   const endDateStr = formatDate(today);
   
   const URL1 = `https://api.polygon.io/v2/aggs/ticker/${STOCK_SYMBOL_1}/range/1/day/${startDateStr}/${endDateStr}?apiKey=${API_KEY}`;
@@ -41,7 +41,6 @@ function IndexIndicator() {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);  // add this line
       setData(data);
     } catch (error) {
       console.error('Error fetching stock data:', error);
@@ -56,12 +55,18 @@ function IndexIndicator() {
   }, []);
 
   const calculateAverages = (data) => {
-    const timeSeries = data && data.results;
+    let timeSeries = data && data.results;
+    
+    // Reverse the time series data to process the most recent data first
+    if (timeSeries) {
+      timeSeries = timeSeries.reverse();
+    }
+    
     let tenDayAverage = 0;
     let twentyDayAverage = 0;
 
-    if (timeSeries && timeSeries.length >= 20) { 
-      const last20days = timeSeries.slice(-20); // Get the latest 20 days
+    if (timeSeries && timeSeries.length >= 20) {
+      const last20days = timeSeries.slice(0, 20); // Get the last 20 days
       for (let i = 0; i < 10; i++) {
         tenDayAverage += last20days[i].c; // Closing price
       }
@@ -75,6 +80,7 @@ function IndexIndicator() {
 
     return { tenDayAverage, twentyDayAverage, timeSeries };
 };
+
 
 
 
@@ -141,7 +147,15 @@ function IndexIndicator() {
         </div>
         <div className="trade__decision">
           <h2>Can I trade today?</h2>
-          <p>{totalGreenChecks() >= 6 ? 'Yes. Market conditions look good:)' : 'No. Best to stay out of the market today.'}</p>
+          <p>
+            { 
+              totalGreenChecks() === 9 
+                ? 'Absolutely! Market is in an excellent condition!' 
+                : totalGreenChecks() >= 6 
+                  ? 'Yes. Market conditions look good!' 
+                  : 'No. Best to stay out of the market today.' 
+            }
+        </p>
         </div>
       </div>
     </section>

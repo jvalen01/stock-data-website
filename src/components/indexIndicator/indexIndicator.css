@@ -21,7 +21,6 @@ color: red;
 
 
 #index{
-    border: 1px solid transparent;
     border-radius: 1rem;
     padding:2rem;
     text-align:center;
@@ -44,7 +43,7 @@ color: red;
     border: 1px solid transparent;
     border-radius: 1rem;
     padding:2rem;
-    color: var(--color-bg);
+    color: var(--color-white);
 
 
 }
