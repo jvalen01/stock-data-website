@@ -59,8 +59,8 @@ function IndexIndicator() {
     
     // Reverse the time series data to process the most recent data first
     if (timeSeries) {
-      timeSeries = timeSeries.reverse();
-    }
+      timeSeries = [...timeSeries].reverse();
+   }
     
     let tenDayAverage = 0;
     let twentyDayAverage = 0;
@@ -94,7 +94,6 @@ function IndexIndicator() {
     return (
       <article className="table__index">
         <h1>{stockSymbol}</h1>
-        <p>Most Recent Close: {mostRecentClose}</p>
         <p>Price Above 10EMA: {mostRecentClose > tenDayAverage ? 
           <span className="green-check">✔</span> : 
           <span className="red-cross">✖</span>
@@ -121,13 +120,22 @@ function IndexIndicator() {
     stocksData.forEach(stockData => {
       const { tenDayAverage, twentyDayAverage, timeSeries } = calculateAverages(stockData);
       const mostRecentClose = timeSeries && timeSeries[0].c;
-      if (mostRecentClose > tenDayAverage) totalChecks++;
-      if (mostRecentClose > twentyDayAverage) totalChecks++;
-      if (tenDayAverage > twentyDayAverage) totalChecks++;
+
+      if (mostRecentClose > tenDayAverage) {
+        totalChecks++;
+      }
+      if (mostRecentClose > twentyDayAverage) {
+        totalChecks++;
+      }
+      if (tenDayAverage > twentyDayAverage) {
+        totalChecks++;
+      }
     });
   
+    console.log("Total Checks:", totalChecks);
     return totalChecks;
   };
+  
 
 
   return (
